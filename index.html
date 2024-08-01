@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Document</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload</title>
 </head>
 <body>
-    <div class="form-container">
-        <h3>Upload Document</h3>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="file">Upload File</label>
-                <input type="file" id="file" name="file" required>
-            </div>
-            <div class="form-group">
-                <label for="documentType">Document Type</label>
-                <input type="text" id="documentType" name="documentType" placeholder="e.g., CV" required>
-            </div>
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Your Name" required>
-            </div>
-            <div class="form-group">
-                <label for="surname">Surname</label>
-                <input type="text" id="surname" name="surname" placeholder="Your Surname" required>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-        <p id="responseMessage"></p>
-    </div>
-    <script src="scripts.js"></script>
+  
+  <h1>Upload a File</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" required />
+    <input type="text" name="name" placeholder="Name" required />
+    <input type="text" name="surname" placeholder="Surname" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="documentType" placeholder="Document Type" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      try {
+        const response = await fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        if (response.ok) {
+          console.log('File uploaded successfully:', result.fileUrl);
+        } else {
+          console.error('Upload failed:', result);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
 </body>
 </html>
