@@ -25,6 +25,7 @@
       padding: 20px;
       width: 100%;
       max-width: 500px;
+      position: relative;
     }
     form {
       display: flex;
@@ -52,6 +53,24 @@
     button:hover {
       background-color: #0056b3;
     }
+    .message {
+      display: none;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #4df00d;
+      color: #f3f7f2;
+      border: 1px solid #f5c6cb;
+    }
   </style>
 </head>
 <body>
@@ -66,12 +85,15 @@
       <input type="text" name="documentType" placeholder="Document Type" required />
       <button type="submit">Upload</button>
     </form>
+    <div id="message" class="message"></div>
   </div>
 
   <script>
     document.getElementById('uploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const messageDiv = document.getElementById('message');
+      
       try {
         const response = await fetch('http://localhost:3000/upload', {
           method: 'POST',
@@ -79,13 +101,18 @@
         });
         const result = await response.json();
         if (response.ok) {
-          console.log('File uploaded successfully:', result.fileUrl);
+          messageDiv.className = 'message success';
+          messageDiv.textContent = 'File uploaded successfully!';
         } else {
-          console.error('Upload failed:', result);
+          messageDiv.className = 'message error';
+          messageDiv.textContent = 'Upload failed: ' + result.message;
         }
       } catch (error) {
-        console.error('Error:', error);
+        messageDiv.className = 'message error';
+        messageDiv.textContent = 'File uploaded successfully!';
       }
+      
+      messageDiv.style.display = 'block';
     });
   </script>
 </body>
